@@ -1,6 +1,4 @@
 import { v2 as cloudinary } from "cloudinary";
-import { log } from "console";
-
 import fs from "fs";
 
 cloudinary.config({
@@ -11,22 +9,17 @@ cloudinary.config({
 
 const uploadOnCloudinary = async (localFilePath) => {
   try {
-    if (!localFilePath) return "File path is missing!!!!";
+    if (!localFilePath) return null;
     const response = await cloudinary.uploader.upload(localFilePath, {
       resource_type: "auto",
     });
     console.log(response.url);
+    fs.unlinkSync(localFilePath);
+    
     return response;
   } catch (error) {
     fs.unlinkSync(localFilePath);
     return null;
   }
-};
-
-cloudinary.config({
-  cloud_name: "",
-  api_key: "",
-  api_secret: "",
-});
-
-export default uploadOnCloudinary;
+}
+export  {uploadOnCloudinary};
